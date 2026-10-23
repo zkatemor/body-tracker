@@ -1,0 +1,426 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Трекер тела: вес, состав тела, объёмы, питание и тренировки.">
+<meta property="og:title" content="Трекер тела Кати">
+<meta property="og:description" content="Вес, состав тела, объёмы, питание и тренировки — апрель 2025 → октябрь 2026">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%227%22 fill=%22%232a78d6%22/%3E%3Cpath d=%22M7 22l6-6 4 4 8-9%22 stroke=%22white%22 stroke-width=%223%22 fill=%22none%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22/%3E%3C/svg%3E">
+<title>Трекер тела Кати</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Onest:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --bg:#f4f6f8; --panel:#ffffff; --ink:#12151a; --ink2:#4d5461; --ink3:#7d8591;
+  --line:#e2e6ec; --grid:#eceff3;
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a;
+  --lean:#2a78d6; --fat:#eb6834;
+  --good:#138a4b; --goodbg:#e4f4ea; --warn:#a86700; --warnbg:#fbf0d9; --bad:#c23b3a; --badbg:#fbe6e5;
+  --chip:#eef1f5;
+  --display:"Unbounded",system-ui,sans-serif; --body:"Onest",system-ui,-apple-system,sans-serif; --mono:"JetBrains Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  color-scheme:dark;--bg:#121418;--panel:#1b1e24;--ink:#f2f4f7;--ink2:#b9c0cb;--ink3:#8a929e;--line:#2c313a;--grid:#262a32;
+  --s1:#3987e5;--s2:#d95926;--s3:#199e70;--lean:#3987e5;--fat:#d95926;
+  --good:#4cc47f;--goodbg:#173323;--warn:#e0a53a;--warnbg:#382a10;--bad:#ef7473;--badbg:#3a1a1a;--chip:#252a31;}}
+:root[data-theme="dark"]{
+  color-scheme:dark;--bg:#121418;--panel:#1b1e24;--ink:#f2f4f7;--ink2:#b9c0cb;--ink3:#8a929e;--line:#2c313a;--grid:#262a32;
+  --s1:#3987e5;--s2:#d95926;--s3:#199e70;--lean:#3987e5;--fat:#d95926;
+  --good:#4cc47f;--goodbg:#173323;--warn:#e0a53a;--warnbg:#382a10;--bad:#ef7473;--badbg:#3a1a1a;--chip:#252a31;}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5;padding:28px 16px 48px}
+.wrap{max-width:1120px;margin:0 auto;display:grid;gap:20px}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(24px,4vw,36px);line-height:1.1;margin:0;text-wrap:balance;letter-spacing:-.01em}
+h2{font-family:var(--display);font-weight:500;font-size:17px;margin:0 0 4px;text-wrap:balance}
+.sub{color:var(--ink2);margin:6px 0 0;max-width:70ch}
+.eyebrow{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);font-weight:600}
+.head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{background:var(--chip);border-radius:999px;padding:4px 10px;font-size:12.5px;color:var(--ink2)}
+.chip b{color:var(--ink);font-weight:600}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:grid;gap:2px}
+.kpi .v{font-family:var(--mono);font-size:26px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.kpi .v small{font-size:13px;color:var(--ink3);font-weight:400;margin-left:3px}
+.kpi .d{font-size:12.5px;color:var(--ink2)}
+.pill{display:inline-block;font-size:11.5px;font-weight:600;border-radius:6px;padding:1px 7px}
+.pill.good{color:var(--good);background:var(--goodbg)} .pill.warn{color:var(--warn);background:var(--warnbg)} .pill.bad{color:var(--bad);background:var(--badbg)}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 18px 16px;min-width:0}
+.panel .note{color:var(--ink2);font-size:13.5px;margin:2px 0 12px;max-width:72ch}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:20px}
+.chart{position:relative;width:100%}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.chart text{font-family:var(--body);font-size:11px;fill:var(--ink3)}
+.chart .lbl{fill:var(--ink);font-family:var(--mono);font-size:11.5px;font-weight:600}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--bg);font-size:12px;padding:6px 9px;border-radius:7px;white-space:nowrap;transform:translate(-50%,-110%);opacity:0;transition:opacity .12s;z-index:3;font-variant-numeric:tabular-nums}
+.tip.on{opacity:1}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12.5px;color:var(--ink2);margin-bottom:8px}
+.legend i{display:inline-block;width:14px;height:3px;border-radius:2px;vertical-align:middle;margin-right:6px}
+.legend i.sq{width:10px;height:10px;border-radius:3px}
+/* composition bars */
+.comp{display:grid;gap:12px}
+.comp-row{display:grid;grid-template-columns:92px 1fr;gap:10px;align-items:center}
+.comp-row .dt{font-family:var(--mono);font-size:12px;color:var(--ink2)}
+.stack{display:flex;gap:2px;height:30px}
+.stack div{border-radius:4px;display:flex;align-items:center;padding:0 8px;font-family:var(--mono);font-size:11.5px;color:#fff;font-weight:600;white-space:nowrap;overflow:hidden}
+.stack .l{background:var(--lean)} .stack .f{background:var(--fat)}
+/* delta list */
+.deltas{display:grid;gap:7px}
+.drow{display:grid;grid-template-columns:minmax(96px,140px) 1fr 138px;gap:10px;align-items:center;font-size:13px}
+.drow .track{height:12px;background:var(--grid);border-radius:4px;position:relative}
+.drow .bar{position:absolute;left:0;top:0;bottom:0;background:var(--s1);border-radius:0 4px 4px 0}
+.drow .num{font-family:var(--mono);font-size:12px;text-align:right;color:var(--ink2);font-variant-numeric:tabular-nums}
+.drow .num b{color:var(--ink)}
+/* facts */
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0 24px}
+.fact{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:13.5px}
+.fact span:last-child{font-family:var(--mono);font-size:12.5px;text-align:right}
+/* energy */
+.ebar{position:relative;height:44px;margin:26px 0 30px}
+.ebar .axis{position:absolute;left:0;right:0;top:20px;height:4px;background:var(--grid);border-radius:2px}
+.ebar .rng{position:absolute;top:12px;height:20px;border-radius:5px}
+.ebar .mk{position:absolute;top:4px;bottom:4px;width:2px;background:var(--ink)}
+.ebar .t{position:absolute;font-size:11.5px;color:var(--ink2);white-space:nowrap;transform:translateX(-50%)}
+.macro{display:flex;gap:2px;height:26px;margin:8px 0 6px}
+.macro div{border-radius:4px;color:#fff;font-size:11.5px;font-weight:600;display:flex;align-items:center;padding:0 8px;white-space:nowrap;overflow:hidden}
+.recs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px}
+.rec{border-top:2px solid var(--ink);padding-top:10px}
+.rec h3{font-size:14.5px;margin:0 0 4px;font-weight:600}
+.rec p{margin:0;color:var(--ink2);font-size:13.5px}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:12.5px;font-variant-numeric:tabular-nums}
+th,td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+th{color:var(--ink3);font-weight:600;font-size:11.5px}
+td{font-family:var(--mono)} td:first-child{font-family:var(--body)}
+details summary{cursor:pointer;color:var(--ink2);font-size:13px}
+details summary:focus-visible{outline:2px solid var(--s1);outline-offset:2px}
+.prog{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.day{display:grid;gap:5px;align-content:start}
+.day b{font-size:13px;font-weight:600;margin-bottom:2px}
+.day span{font-size:13px;background:var(--chip);border-radius:6px;padding:4px 8px}
+.day span.add{background:transparent;border:1px dashed var(--s3);color:var(--good)}
+.mrow{display:grid;grid-template-columns:minmax(96px,140px) 1fr 56px;gap:10px;align-items:center;font-size:13px}
+.mtrack{position:relative;height:12px}
+.mtrack::before{content:"";position:absolute;left:50%;top:-3px;bottom:-3px;width:1px;background:var(--ink3)}
+.mtrack div{position:absolute;top:0;bottom:0}
+.foot{color:var(--ink3);font-size:12px;max-width:80ch}
+</style>
+</head><body>
+<div class="wrap">
+  <header class="head">
+    <div>
+      <div class="eyebrow">Трекер тела · апрель 2025 → октябрь 2026</div>
+      <h1>−17,7 кг, из них почти всё — жир</h1>
+      <p class="sub">С конца сентября — финальный отрезок: 1600 ккал и новая силовая программа с упором на ягодицы. За первый месяц −0,5 кг; объёмы рук, плеч и бёдер выросли — в основном вода от новой нагрузки, а не жир.</p>
+    </div>
+    <div class="chips">
+      <span class="chip">Рост <b>154 см</b></span><span class="chip">Возраст <b>28</b></span>
+      <span class="chip">Цель <b>1600</b> ккал</span><span class="chip">Б <b>110–120</b> · Ж <b>45–50 г</b></span>
+      <span class="chip">Силовые <b>3×/нед</b></span><span class="chip"><b>8–10 тыс.</b> шагов</span>
+    </div>
+  </header>
+
+  <section class="kpis" aria-label="Ключевые показатели">
+    <div class="kpi"><span class="eyebrow">Вес · 23.10</span><span class="v">58,2<small>кг</small></span><span class="d">старт 75,9 · <span class="pill good">−17,7</span></span></div>
+    <div class="kpi"><span class="eyebrow">% жира · 23.09</span><span class="v">30,6<small>%</small></span><span class="d">было 44,1 · <span class="pill warn">избыток I ст.</span></span></div>
+    <div class="kpi"><span class="eyebrow">Скелетные мышцы · 23.09</span><span class="v">22,6<small>кг</small></span><span class="d">было 22,9 · <span class="pill good">сохранены</span></span></div>
+    <div class="kpi"><span class="eyebrow">Талия · 23.10</span><span class="v">74,0<small>см</small></span><span class="d">было 89 · <span class="pill good">−15,0</span></span></div>
+    <div class="kpi"><span class="eyebrow">Темп за октябрь</span><span class="v">−0,12<small>кг/нед</small></span><span class="d">цель 0,25–0,35 · <span class="pill warn">ниже цели</span></span></div>
+    <div class="kpi"><span class="eyebrow">Еда, факт 1–22.10</span><span class="v">1620<small>ккал</small></span><span class="d">Б 97 · Ж 56 · <span class="pill warn">белок мало</span></span></div>
+  </section>
+
+  <div class="grid2">
+    <section class="panel">
+      <h2>Вес</h2>
+      <p class="note">Снижение шло ступеньками: активные фазы летом–осенью и весной, почти стоп зимой и летом 2026. В октябре вес снова пошёл вниз, но медленно.</p>
+      <div class="chart" id="cWeight"></div>
+    </section>
+    <section class="panel">
+      <h2>Темп снижения по периодам</h2>
+      <p class="note">кг в неделю между замерами. Здоровый устойчивый темп при вашем весе — примерно 0,25–0,5 кг/нед (зона выделена).</p>
+      <div class="chart" id="cRate"></div>
+    </section>
+  </div>
+
+  <div class="grid2">
+    <section class="panel">
+      <h2>Состав тела: что именно ушло</h2>
+      <p class="note">По трём замерам на биоимпедансе (Accuniq). Из −15 кг веса ~14,5 кг — жир, безжировая масса −0,5 кг, скелетные мышцы −0,3 кг (в пределах погрешности прибора). Это отличный результат для такого большого снижения.</p>
+      <div class="legend"><span><i class="sq" style="background:var(--lean)"></i>Безжировая масса</span><span><i class="sq" style="background:var(--fat)"></i>Жировая масса</span></div>
+      <div class="comp" id="comp"></div>
+    </section>
+    <section class="panel">
+      <h2>% жира в теле</h2>
+      <p class="note">Для женщины 28 лет: 21–24% — спортивная форма, 25–31% — норма/«фитнес», выше 32% — избыток. Вы на границе; следующая цель — 24–25%.</p>
+      <div class="chart" id="cFat"></div>
+    </section>
+  </div>
+
+  <div class="grid2">
+    <section class="panel">
+      <h2>Талия и таз</h2>
+      <p class="note">Талия уходит быстрее таза — силуэт стал выраженнее: талия/таз по сантиметру 0,79 → 0,75. В октябре таз −1 см, талия +0,5…+1 см — в пределах колебаний воды.</p>
+      <div class="chart" id="cWaist"></div>
+    </section>
+    <section class="panel">
+      <h2>Сколько ушло по объёмам</h2>
+      <p class="note">Первый замер (09.05.2025) → последний (23.10.2026), см.</p>
+      <div class="deltas" id="deltas"></div>
+    </section>
+  </div>
+
+  <div class="grid2">
+    <section class="panel">
+      <h2>Октябрь: изменения за месяц</h2>
+      <p class="note">23.09 → 23.10, см. Рост рук, плеч и бёдер на 1,5–2,5 см за месяц на дефиците — это гликоген, вода и отёк после новых упражнений (сплит-присед, зашагивания, подтягивания), а не жир. Мышечная ткань даёт миллиметры.</p>
+      <div class="deltas" id="mdeltas"></div>
+    </section>
+    <section class="panel">
+      <h2>Программа с октября</h2>
+      <p class="note">Два дня на ноги и ягодицы, один на верх. Пунктиром — что стоит добавить.</p>
+      <div class="prog">
+        <div class="day"><b>Пн · ноги</b><span>Приседания</span><span>Зашагивания</span><span>Гиперэкстензия</span><span>Сгибания ног лёжа</span><span>Отведение</span></div>
+        <div class="day"><b>Ср · верх</b><span>Подтягивания</span><span>Жим от груди</span><span>Бицепс</span><span>Махи</span><span class="add">+ Тяга гантели / горизонт. блока</span></div>
+        <div class="day"><b>Пт · ягодицы</b><span>Ягодичный мост</span><span>Сплит-присед</span><span>Махи назад</span><span>Сведение</span><span class="add">+ Махи в наклоне</span><span class="add">+ Тяга верхнего блока</span></div>
+      </div>
+      <p class="note" style="margin-top:12px">База 3–4×8–12, изоляция 12–15, 1–2 повтора в запасе. Достигли верха диапазона во всех подходах → +вес. Записывайте рабочие веса — на дефиците это главный индикатор мышц.</p>
+    </section>
+  </div>
+
+  <section class="panel">
+    <h2>Питание в октябре · FatSecret</h2>
+    <p class="note">Среднее за 1–22.10 — 1620 ккал: по дневнику вы в цели. Но 6 дней из 22 записаны не полностью (пропущен приём пищи — отмечены штриховкой), около трети рациона — готовая еда с погрешностью этикеток. Реально, вероятно, ~1700–1750 ккал — отсюда медленный темп.</p>
+    <div class="legend"><span><i class="sq" style="background:var(--s1)"></i>Записан полностью</span><span><i class="sq" style="background:repeating-linear-gradient(135deg,var(--s2) 0 3px,transparent 3px 6px);outline:1px solid var(--s2)"></i>Пропущен приём пищи</span><span><i style="background:var(--ink)"></i>Цель 1600</span></div>
+    <div class="chart" id="cFood"></div>
+    <div class="grid2" style="margin-top:14px;gap:14px">
+      <div><div class="eyebrow">Белок по дням, г · цель 110</div><div class="chart" id="cProt"></div></div>
+      <div><div class="eyebrow">Жиры по дням, г · цель ≤50</div><div class="chart" id="cFatg"></div></div>
+    </div>
+  </section>
+
+  <div class="grid2">
+    <section class="panel">
+      <h2>Энергобаланс сейчас</h2>
+      <p class="note">Базальный обмен по прибору — 1247 ккал, расход с силовыми и шагами ~1850–1950. При честных 1600 дефицит ~300 ккал = −0,3 кг/нед. В октябре вышло −0,12 кг/нед — это реальный дефицит ~120 ккал/день (часть может маскировать вода).</p>
+      <div class="ebar" id="ebar"></div>
+      <div class="eyebrow" style="margin-top:6px">Макросы: факт октября → цель</div>
+      <div class="macro" id="macroFact"></div>
+      <div class="macro" id="macroGoal"></div>
+      <p class="note" style="margin-top:8px">Под упор на силовые белок нужен ~2 г/кг (110–120 г). Добрать проще всего, заменив один сладкий перекус в день на скир или Exponenta. Жиры — 45–50 г, но не ниже 45.</p>
+    </section>
+    <section class="panel">
+      <h2>Биоимпеданс 23.09.2026</h2>
+      <p class="note">Последний тест. Следующий — в конце ноября, утром натощак, без тренировки накануне.</p>
+      <div class="facts">
+        <div class="fact"><span>Висцеральный жир (уровень)</span><span>7 <span class="pill warn">погран.</span></span></div>
+        <div class="fact"><span>Площадь висц. жира</span><span>51 см² <span class="pill good">норма</span></span></div>
+        <div class="fact"><span>Индекс талия/бедро</span><span>0,84 <span class="pill warn">верх нормы</span></span></div>
+        <div class="fact"><span>Окружность живота</span><span>77,1 см <span class="pill good">&lt;88</span></span></div>
+        <div class="fact"><span>ИМТ</span><span>24,7 <span class="pill good">норма</span></span></div>
+        <div class="fact"><span>Талия / рост (сантиметр)</span><span>0,48 <span class="pill good">&lt;0,5</span></span></div>
+        <div class="fact"><span>Белки / минералы / вода</span><span>8,0 / 2,9 / 29,8</span></div>
+        <div class="fact"><span>Мышцы рук П/Л</span><span>2,06 / 2,01 кг</span></div>
+        <div class="fact"><span>Мышцы ног П/Л</span><span>5,72 / 5,86 кг</span></div>
+        <div class="fact"><span>Мышцы туловища</span><span>19,07 кг <span class="pill good">выше нормы</span></span></div>
+        <div class="fact"><span>Жир: туловище / ноги / руки</span><span>9,0 / 5,2 / 2,3 кг</span></div>
+        <div class="fact"><span>Цель прибора</span><span>54,2 кг (−4,4 жира)</span></div>
+      </div>
+    </section>
+  </div>
+
+  <section class="panel">
+    <h2>Прогноз до цели</h2>
+    <p class="note">При сохранении 40,6 кг безжировой массы: 25% жира ≈ 54 кг, 23% ≈ 52,7 кг. Осталось −4…−5,5 кг. Линии — два сценария от 23.10: честные 1600 ккал (0,3 кг/нед, цель к марту) и темп октября (0,12 кг/нед).</p>
+    <div class="chart" id="cProj"></div>
+  </section>
+
+  <section class="panel">
+    <h2>Что делать дальше</h2>
+    <div class="recs" style="margin-top:10px">
+      <div class="rec"><h3>Записывать каждый приём пищи</h3><p>Даже «на глаз». Пропущенный обед или ужин хуже, чем приблизительно записанный. Масло и соусы — тоже.</p></div>
+      <div class="rec"><h3>Белок +15–20 г в день</h3><p>Один сладкий перекус (Барни, зефир, конфеты — ~40 штук за 3 недели) → скир / Exponenta. Сладкое не запрещено: одна штука в день, а не две-три.</p></div>
+      <div class="rec"><h3>Жиры до 50 г</h3><p>Основные источники сверху — сыр, майонез, готовые блюда, раф/флэт уайт. Кофе на обезжиренном молоке — самый простой шаг.</p></div>
+      <div class="rec"><h3>Выходные в том же коридоре</h3><p>В среднем выходные +100 ккал к будням, 11.10 — 2059 ккал. Один такой день съедает треть недельного дефицита.</p></div>
+      <div class="rec"><h3>Добавить верх во второй день</h3><p>Горизонтальная тяга в среду, махи в наклоне и тяга верхнего блока в пятницу: спина и плечи визуально сужают талию.</p></div>
+      <div class="rec"><h3>Замерять в воскресенье утром</h3><p>≥48 ч после тренировки группы, натощак. Первые 4–6 недель новой программы объёмы будут «плавать» — смотрите на средний вес за неделю, талию у пупка и рабочие веса. Не снижаем калории, пока 2–3 недели честного учёта не покажут стоп.</p></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <details open>
+      <summary>Все данные таблицей</summary>
+      <div class="tbl" id="tbl" style="margin-top:12px"></div>
+    </details>
+  </section>
+
+  <p class="foot">Данные: «body measurement tracker» (замеры сантиметром, 09.05.2025–23.10.2026, старт 12.04.2025), дневник FatSecret 1–22.10.2026 и распечатка Accuniq BC380 с историей тестов 29.04.2025, 01.07.2026 и 23.09.2026. Жировая/безжировая масса для ранних тестов посчитана из веса и % жира. Расход калорий — оценка. Это не медицинская рекомендация.</p>
+</div>
+
+<script>
+(function(){
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const D=s=>{const[d,m,y]=s.split('.').map(Number);return new Date(y,m-1,d)};
+const fmt=d=>d.toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit',year:'2-digit'});
+const num=(v,p=1)=>v.toLocaleString('ru-RU',{minimumFractionDigits:p,maximumFractionDigits:p});
+const NS='http://www.w3.org/2000/svg';
+const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e};
+
+const dates=['12.04.2025','09.05.2025','20.05.2025','11.07.2025','15.12.2025','09.03.2026','26.06.2026','23.09.2026','23.10.2026'];
+const weight=[75.9,74.0,72.6,70.1,64.5,64.0,59.5,58.7,58.2];
+const meas={
+ 'Талия':[89,90,88,79,79,75,73.5,74],'Талия (пупок)':[109,107,100,98,98,92,87,88],'Таз':[113,110,110,104,104,100,100,99],
+ 'Плечи':[109,109,106,105,104,102,99,101.5],'Бицепс':[35,32,30,30,28,29,28,29],'Бицепс (напряж.)':[35.5,34,31,31,29,30,30,31.5],
+ 'Бедро (крупн.)':[68,66,65,59,59,58,57,59],'Бедро (серед.)':[59,59,59,51,51,52,52,54],'Голень':[42,40,40,39,38,38,39,39]};
+const food=[[1953,79.7,83.9,1],[1678,97.8,54],[1781,106.1,69.3,1],[1580,116.9,46.9,1],[1616,108.7,55.8],[1593,102.6,50.6],[1575,79.9,57.3],[1437,92.9,51.7],[1715,81.2,66.1],[1709,93.5,56.3],[2059,85,75,1],[1420,76.5,55.8],[1210,79.2,33.4,1],[1628,101,54.4],[1428,100.2,55.1],[1674,87.2,68.6],[1495,116.8,51.4,1],[1542,80.3,45.1],[1740,113.2,45.1],[1542,116.9,49.7],[1619,105.9,50.7],[1640,111.1,56.8]];
+const mdates=dates.slice(1);
+const inb=[{d:'29.04.2025',w:73.6,pbf:44.1,smm:22.9},{d:'01.07.2026',w:59.6,pbf:31.6,smm:22.8},{d:'23.09.2026',w:58.6,pbf:30.6,smm:22.6,fat:18.0,ffm:40.6}];
+
+function tipFor(box){const t=document.createElement('div');t.className='tip';box.appendChild(t);return t}
+
+function lineChart(id,series,o){
+  const box=document.getElementById(id);box.innerHTML='';
+  if(series.length>1){const lg=document.createElement('div');lg.className='legend';lg.innerHTML=series.map(s=>`<span><i style="background:var(${s.c})${s.dash?';background:repeating-linear-gradient(90deg,var('+s.c+') 0 4px,transparent 4px 7px)':''}"></i>${s.name}</span>`).join('');box.appendChild(lg)}
+  const W=o.w||560,H=o.h||260,m={t:14,r:o.r||64,b:28,l:40};
+  const svg=el('svg',{viewBox:`0 0 ${W} ${H}`,role:'img','aria-label':o.aria},box);
+  const all=series.flatMap(s=>s.pts);
+  const x0=o.x0||Math.min(...all.map(p=>+p.d)),x1=o.x1||Math.max(...all.map(p=>+p.d));
+  const y0=o.y0,y1=o.y1;
+  const X=v=>m.l+(v-x0)/(x1-x0)*(W-m.l-m.r),Y=v=>H-m.b-(v-y0)/(y1-y0)*(H-m.t-m.b);
+  for(let v=y0;v<=y1+1e-9;v+=o.step){el('line',{x1:m.l,x2:W-m.r,y1:Y(v),y2:Y(v),stroke:css('--grid'),'stroke-width':1},svg);el('text',{x:m.l-8,y:Y(v)+4,'text-anchor':'end'},svg).textContent=num(v,0)}
+  // x ticks: quarters
+  const s0=new Date(x0);for(let d=new Date(s0.getFullYear(),Math.ceil((s0.getMonth()+1)/3)*3,1);+d<=x1;d.setMonth(d.getMonth()+3)){const tx=X(+d);el('text',{x:tx,y:H-8,'text-anchor':'middle'},svg).textContent=d.toLocaleDateString('ru-RU',{month:'short'}).replace('.','')+' ’'+String(d.getFullYear()).slice(2)}
+  if(o.band){const[b0,b1,lab]=o.band;el('rect',{x:m.l,width:W-m.l-m.r,y:Y(b1),height:Y(b0)-Y(b1),fill:css('--good'),opacity:.1},svg);el('text',{x:m.l+6,y:Y(b1)+13,style:'fill:var(--good)'},svg).textContent=lab}
+  series.forEach(s=>{
+    const c=css(s.c);const d=s.pts.map((p,i)=>(i?'L':'M')+X(+p.d)+','+Y(p.v)).join('');
+    el('path',{d,fill:'none',stroke:c,'stroke-width':2,'stroke-linejoin':'round','stroke-dasharray':s.dash||''},svg);
+    s.pts.forEach((p,i)=>{if(s.noDots&&i)return;el('circle',{cx:X(+p.d),cy:Y(p.v),r:i===s.pts.length-1?5:3.5,fill:c,stroke:css('--panel'),'stroke-width':2},svg)});
+    const L=s.pts[s.pts.length-1];if(!s.noEnd)el('text',{x:X(+L.d)+9,y:Y(L.v)+4+(s.dy||0),class:'lbl'},svg).textContent=num(L.v,s.p??1)+(s.unit||'');
+    if(s.first){const F=s.pts[0];el('text',{x:X(+F.d),y:Y(F.v)-10,class:'lbl','text-anchor':'start'},svg).textContent=num(F.v,s.p??1)+(s.unit||'')}
+  });
+  // hover
+  const tip=tipFor(box);const vl=el('line',{y1:m.t,y2:H-m.b,stroke:css('--ink3'),'stroke-width':1,opacity:0},svg);
+  const xs=[...new Set(all.map(p=>+p.d))].sort((a,b)=>a-b);
+  const hit=el('rect',{x:m.l,y:m.t,width:W-m.l-m.r,height:H-m.t-m.b,fill:'transparent'},svg);
+  const move=e=>{const r=svg.getBoundingClientRect();const sx=(e.clientX-r.left)/r.width*W;let best=xs[0];xs.forEach(v=>{if(Math.abs(X(v)-sx)<Math.abs(X(best)-sx))best=v});
+    vl.setAttribute('x1',X(best));vl.setAttribute('x2',X(best));vl.setAttribute('opacity',.5);
+    const rows=series.map(s=>{const p=s.pts.find(p=>+p.d===best);return p?`${series.length>1?s.name+': ':''}<b>${num(p.v,s.p??1)}${s.unit||''}</b>`:null}).filter(Boolean);
+    tip.innerHTML=`${fmt(new Date(best))}<br>`+rows.join('<br>');tip.style.left=(X(best)/W*100)+'%';tip.style.top=(m.t/H*100+10)+'%';tip.classList.add('on')};
+  hit.addEventListener('pointermove',move);hit.addEventListener('pointerleave',()=>{tip.classList.remove('on');vl.setAttribute('opacity',0)});
+}
+
+// weight
+lineChart('cWeight',[{name:'Вес',c:'--s1',pts:dates.map((d,i)=>({d:D(d),v:weight[i]})),unit:' кг',first:true}],{y0:55,y1:80,step:5,aria:'Вес с 75,9 до 58,2 кг'});
+
+// rate bars
+(function(){
+  const box=document.getElementById('cRate');const W=560,H=260,m={t:18,r:10,b:40,l:40};
+  const svg=el('svg',{viewBox:`0 0 ${W} ${H}`,role:'img','aria-label':'Темп снижения веса по периодам'},box);
+  const rates=[];for(let i=1;i<dates.length;i++){const days=(D(dates[i])-D(dates[i-1]))/864e5;rates.push({a:dates[i-1],b:dates[i],days,dw:weight[i]-weight[i-1],r:-(weight[i]-weight[i-1])/days*7})}
+  const y1=1.0,Y=v=>H-m.b-v/y1*(H-m.t-m.b);
+  [0,.25,.5,.75,1].forEach(v=>{el('line',{x1:m.l,x2:W-m.r,y1:Y(v),y2:Y(v),stroke:css('--grid')},svg);el('text',{x:m.l-8,y:Y(v)+4,'text-anchor':'end'},svg).textContent=num(v,2)});
+  el('rect',{x:m.l,width:W-m.l-m.r,y:Y(.5),height:Y(.25)-Y(.5),fill:css('--good'),opacity:.1},svg);
+  const bw=(W-m.l-m.r)/rates.length;const tip=tipFor(box);
+  rates.forEach((r,i)=>{const x=m.l+i*bw+bw*.2,w=bw*.6,y=Y(r.r),h=Y(0)-y;
+    const slow=r.r<.15;const col=slow?css('--s2'):css('--s1');
+    el('path',{d:`M${x},${Y(0)}V${y+4}a4,4 0 0 1 4,-4h${w-8}a4,4 0 0 1 4,4V${Y(0)}Z`,fill:col},svg);
+    el('text',{x:x+w/2,y:y-6,'text-anchor':'middle',class:'lbl'},svg).textContent=num(r.r,2);
+    const lb=el('text',{x:x+w/2,y:H-m.b+15,'text-anchor':'middle'},svg);lb.textContent=r.b.slice(3,5)+'.'+r.b.slice(8);
+    const hit=el('rect',{x:m.l+i*bw,y:m.t,width:bw,height:H-m.t-m.b,fill:'transparent'},svg);
+    hit.addEventListener('pointerenter',()=>{tip.innerHTML=`${r.a} → ${r.b}<br>${Math.round(r.days)} дн · <b>${num(r.dw,1)} кг</b> · ${num(r.r,2)} кг/нед`;tip.style.left=((x+w/2)/W*100)+'%';tip.style.top=(y/H*100)+'%';tip.classList.add('on')});
+    hit.addEventListener('pointerleave',()=>tip.classList.remove('on'));
+  });
+  el('text',{x:m.l,y:H-4},svg).textContent='конец периода (мм.гг) · оранжевый — плато < 0,15 кг/нед';
+})();
+
+// composition
+(function(){
+  const box=document.getElementById('comp');const max=74;
+  box.innerHTML=inb.map(t=>{const fat=t.fat??+(t.w*t.pbf/100).toFixed(1),ffm=t.ffm??+(t.w-fat).toFixed(1);
+    return `<div class="comp-row"><span class="dt">${t.d}</span><div><div class="stack" style="width:${t.w/max*100}%"><div class="l" style="flex:${ffm}">${num(ffm)}</div><div class="f" style="flex:${fat}">${num(fat)}</div></div><div style="font-size:12px;color:var(--ink3);margin-top:3px;font-family:var(--mono)">${num(t.w)} кг · жир ${num(t.pbf)}% · СММ ${num(t.smm)} кг</div></div></div>`}).join('');
+})();
+
+// fat %
+lineChart('cFat',[{name:'% жира',c:'--s2',pts:inb.map(t=>({d:D(t.d),v:t.pbf})),unit:'%',first:true}],{y0:20,y1:50,step:5,band:[21,25,'цель 21–25%'],aria:'Процент жира 44,1 → 30,6'});
+
+// waist
+lineChart('cWaist',[
+  {name:'Таз',c:'--s3',pts:mdates.map((d,i)=>({d:D(d),v:meas['Таз'][i]})),unit:'',p:1,dy:-2},
+  {name:'Талия (пупок)',c:'--s2',pts:mdates.map((d,i)=>({d:D(d),v:meas['Талия (пупок)'][i]})),unit:'',p:1,dy:6},
+  {name:'Талия',c:'--s1',pts:mdates.map((d,i)=>({d:D(d),v:meas['Талия'][i]})),unit:'',p:1}
+],{y0:70,y1:115,step:10,r:48,aria:'Талия, талия по пупку и таз, см'});
+
+// deltas
+(function(){
+  const rows=Object.entries(meas).map(([k,v])=>({k,a:v[0],b:v[v.length-1],d:v[0]-v[v.length-1]})).sort((x,y)=>y.d-x.d);
+  const mx=Math.max(...rows.map(r=>r.d));
+  document.getElementById('deltas').innerHTML=rows.map(r=>`<div class="drow"><span>${r.k}</span><div class="track"><div class="bar" style="width:${r.d/mx*100}%"></div></div><span class="num"><b>−${num(r.d)}</b> · ${num(r.a,1)}→${num(r.b,1)}</span></div>`).join('');
+})();
+
+// month deltas
+(function(){
+  const rows=Object.entries(meas).map(([k,v])=>({k,d:v[v.length-1]-v[v.length-2]}));
+  const mx=3;
+  document.getElementById('mdeltas').innerHTML=rows.map(r=>{const w=Math.abs(r.d)/mx*50;const pos=r.d>0;
+    const bar=r.d===0?'':`<div style="${pos?'left:50%':'right:50%'};width:${w}%;background:var(${pos?'--s2':'--s1'});border-radius:${pos?'0 4px 4px 0':'4px 0 0 4px'}"></div>`;
+    return `<div class="mrow"><span>${r.k}</span><div class="mtrack">${bar}</div><span class="num" style="font-family:var(--mono);font-size:12px;text-align:right"><b>${r.d>0?'+':r.d<0?'−':''}${num(Math.abs(r.d))}</b></span></div>`}).join('')+
+    `<div class="mrow" style="color:var(--ink3);font-size:11.5px"><span></span><div style="display:flex;justify-content:space-between"><span>← уменьшилось</span><span>выросло →</span></div><span></span></div>`;
+})();
+
+// food bars
+function dayBars(id,vals,o){
+  const box=document.getElementById(id);const W=o.w||1000,H=o.h||220,m={t:16,r:10,b:24,l:40};
+  const svg=el('svg',{viewBox:`0 0 ${W} ${H}`,role:'img','aria-label':o.aria},box);
+  const Y=v=>H-m.b-(v-o.y0)/(o.y1-o.y0)*(H-m.t-m.b);
+  for(let v=o.y0;v<=o.y1;v+=o.step){el('line',{x1:m.l,x2:W-m.r,y1:Y(v),y2:Y(v),stroke:css('--grid')},svg);el('text',{x:m.l-8,y:Y(v)+4,'text-anchor':'end'},svg).textContent=v}
+  const defs=el('defs',{},svg);const pat=el('pattern',{id:id+'h',width:6,height:6,patternUnits:'userSpaceOnUse',patternTransform:'rotate(45)'},defs);
+  el('rect',{width:6,height:6,fill:css('--panel')},pat);el('rect',{width:3,height:6,fill:css('--s2')},pat);
+  const bw=(W-m.l-m.r)/vals.length;const tip=tipFor(box);
+  vals.forEach((v,i)=>{const x=m.l+i*bw+bw*.15,w=bw*.7,y=Y(Math.min(v.v,o.y1));const r=Math.min(3,w/2);
+    const fill=v.inc?`url(#${id}h)`:(o.bad&&o.bad(v.v)?css('--s2'):css('--s1'));
+    el('path',{d:`M${x},${Y(o.y0)}V${y+r}a${r},${r} 0 0 1 ${r},-${r}h${w-2*r}a${r},${r} 0 0 1 ${r},${r}V${Y(o.y0)}Z`,fill,stroke:v.inc?css('--s2'):'none','stroke-width':v.inc?1:0},svg);
+    if(o.labels||i%2===0)el('text',{x:x+w/2,y:H-8,'text-anchor':'middle'},svg).textContent=i+1;
+    const hit=el('rect',{x:m.l+i*bw,y:m.t,width:bw,height:H-m.t-m.b,fill:'transparent'},svg);
+    hit.addEventListener('pointerenter',()=>{tip.innerHTML=`${i+1}.10 · <b>${num(v.v,0)} ${o.unit}</b>${v.inc?'<br>пропущен приём пищи':''}`;tip.style.left=((x+w/2)/W*100)+'%';tip.style.top=(y/H*100)+'%';tip.classList.add('on')});
+    hit.addEventListener('pointerleave',()=>tip.classList.remove('on'));
+  });
+  el('line',{x1:m.l,x2:W-m.r,y1:Y(o.goal),y2:Y(o.goal),stroke:css('--ink'),'stroke-width':1.5,'stroke-dasharray':'5 3'},svg);
+  el('text',{x:W-m.r,y:Y(o.goal)-6,'text-anchor':'end',class:'lbl'},svg).textContent=o.goalLbl;
+}
+dayBars('cFood',food.map(f=>({v:f[0],inc:!!f[3]})),{y0:0,y1:2200,step:500,goal:1600,goalLbl:'цель 1600 · среднее 1620',unit:'ккал',labels:true,aria:'Калории по дням октября'});
+dayBars('cProt',food.map(f=>({v:f[1]})),{w:520,h:180,y0:0,y1:125,step:25,goal:110,goalLbl:'110',unit:'г белка',bad:v=>v<100,aria:'Белок по дням'});
+dayBars('cFatg',food.map(f=>({v:f[2]})),{w:520,h:180,y0:0,y1:90,step:20,goal:50,goalLbl:'50',unit:'г жира',bad:v=>v>55,aria:'Жиры по дням'});
+
+// energy bar
+(function(){
+  const box=document.getElementById('ebar');const lo=1100,hi=2100,P=v=>(v-lo)/(hi-lo)*100;
+  box.innerHTML=`<div class="axis"></div>
+  <div class="rng" style="left:${P(1620)}%;width:${P(1750)-P(1620)}%;background:var(--s1);opacity:.85"></div>
+  <div class="rng" style="left:${P(1850)}%;width:${P(1950)-P(1850)}%;background:var(--s3);opacity:.85"></div>
+  <div class="mk" style="left:${P(1247)}%"></div>
+  <span class="t" style="left:${P(1247)}%;top:-18px">БОО 1247</span>
+  <span class="t" style="left:${P(1685)}%;top:-18px">еда ~1620–1750</span>
+  <span class="t" style="left:${P(1900)}%;top:38px">расход ~1850–1950</span>
+  ${[1200,1400,1600,1800,2000].map(v=>`<span class="t" style="left:${P(v)}%;top:38px;color:var(--ink3);${v===1800||v===2000?'display:none':''}">${v}</span>`).join('')}`;
+  const mac=(lab,pg,fg,cg)=>{const p=pg*4,f=fg*9,c=cg*4,k=p+f+c;return `<div style="flex:0 0 52px;background:transparent;color:var(--ink2);padding:0">${lab}</div><div style="flex:${p};background:var(--s1)">Б ${pg} г</div><div style="flex:${f};background:var(--s2)">Ж ${fg} г</div><div style="flex:${c};background:var(--s3)">У ${cg} г</div>`};
+  document.getElementById('macroFact').innerHTML=mac('факт',97,56,182);document.getElementById('macroGoal').innerHTML=mac('цель',115,48,177);
+})();
+
+// projection
+(function(){
+  const today=D('23.10.2026');const hist=dates.map((d,i)=>({d:D(d),v:weight[i]}));
+  const proj=(r)=>{const pts=[];for(let w=0;w<=26;w+=2){pts.push({d:new Date(+today+w*7*864e5),v:Math.max(53.5,58.2-r*w)})}return pts};
+  lineChart('cProj',[
+    {name:'Факт',c:'--s1',pts:hist,unit:' кг',noEnd:true},
+    {name:'0,3 кг/нед (честные 1600)',c:'--s3',pts:proj(.3),unit:' кг',dash:'5 4',noDots:true,dy:8},
+    {name:'0,12 кг/нед (как в октябре)',c:'--s2',pts:proj(.12),unit:' кг',dash:'5 4',noDots:true,dy:-6}
+  ],{y0:50,y1:80,step:5,w:1000,h:280,r:70,band:[52.7,54.1,'цель ~53–54 кг (23–25% жира)'],aria:'Прогноз веса'});
+})();
+
+// table
+(function(){
+  const hdr=['Замер',...mdates.map(d=>d.slice(0,6)+d.slice(8)),'Δ'];
+  const rows=[['Вес, кг',...weight.slice(1)],...Object.entries(meas).map(([k,v])=>[k+', см',...v])];
+  document.getElementById('tbl').innerHTML=`<table><thead><tr>${hdr.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr><td>${r[0]}</td>${r.slice(1).map(v=>`<td>${num(v)}</td>`).join('')}<td>${num(r[r.length-1]-r[1])}</td></tr>`).join('')}</tbody></table>
+  <table style="margin-top:14px"><thead><tr><th>Биоимпеданс</th><th>Вес</th><th>% жира</th><th>Жир, кг</th><th>Безжир., кг</th><th>СММ, кг</th></tr></thead><tbody>${inb.map(t=>{const f=t.fat??t.w*t.pbf/100;return `<tr><td>${t.d}</td><td>${num(t.w)}</td><td>${num(t.pbf)}</td><td>${num(f)}</td><td>${num(t.ffm??t.w-f)}</td><td>${num(t.smm)}</td></tr>`}).join('')}</tbody></table>`;
+})();
+})();
+</script>
+</body></html>
