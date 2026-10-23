@@ -1,0 +1,4 @@
+# секреты FatSecret — никогда не коммитить (репозиторий публичный)
+fatsecret/.env
+fatsecret/token.json
+fatsecret/data/
