@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Питание · Трекер тела Кати</title>
+<meta name="description" content="Дневник питания FatSecret с апреля 2025: калории, БЖУ, дни недели и связь с весом.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%227%22 fill=%22%232a78d6%22/%3E%3Cpath d=%22M7 22l6-6 4 4 8-9%22 stroke=%22white%22 stroke-width=%223%22 fill=%22none%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Onest:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <a class="brand" href="./">Трекер тела</a>
+    <nav class="tabs" aria-label="Разделы"><a href="./">Главная</a><a href="food.html" aria-current="page">Питание</a><a href="steps.html">Шаги и активность</a></nav>
+  </div>
+
+  <header>
+    <div class="eyebrow">Дневник FatSecret · <span id="range"></span></div>
+    <h1>Питание</h1>
+    <p class="sub" id="lead"></p>
+  </header>
+
+  <div class="ctl">
+    <div class="seg" role="group" aria-label="Период" id="period">
+      <button type="button" data-p="all" aria-pressed="true">Всё время</button>
+      <button type="button" data-p="2025" aria-pressed="false">2025</button>
+      <button type="button" data-p="2026" aria-pressed="false">2026</button>
+      <button type="button" data-p="90" aria-pressed="false">90 дней</button>
+      <button type="button" data-p="30" aria-pressed="false">30 дней</button>
+    </div>
+    <span class="note" style="margin:0;font-size:12.5px;color:var(--ink3)">Средние — по полностью записанным дням (≥800 ккал)</span>
+  </div>
+
+  <section class="kpis" id="kpis" aria-label="Итоги периода"></section>
+
+  <section class="panel">
+    <h2>Калории по месяцам</h2>
+    <p class="note">Среднее за день. Штриховка — меньше 10 записанных дней в месяце, среднее ненадёжно.</p>
+    <div class="chart" id="cMonth"></div>
+  </section>
+
+  <div class="grid2">
+    <section class="panel">
+      <h2>Белки, жиры, углеводы по месяцам</h2>
+      <p class="note">Граммы в день. Цели сейчас: белок 110–120, жиры 45–50.</p>
+      <div class="chart" id="cMacro"></div>
+    </section>
+    <section class="panel">
+      <h2>По дням недели</h2>
+      <p class="note">Среднее за выбранный период.</p>
+      <div class="chart" id="cWeek"></div>
+    </section>
+  </div>
+
+  <section class="panel">
+    <div class="ctl">
+      <div><h2>По дням</h2><p class="note" style="margin:0">Штриховка — день записан не полностью (меньше 800 ккал).</p></div>
+      <label style="font-size:13px;color:var(--ink2)">Месяц <select id="monthSel"></select></label>
+    </div>
+    <div class="chart" id="cDays"></div>
+    <div class="grid2" style="margin-top:14px;gap:14px">
+      <div><div class="eyebrow">Белок, г · цель 110</div><div class="chart" id="cDayP"></div></div>
+      <div><div class="eyebrow">Жиры, г · цель ≤50</div><div class="chart" id="cDayF"></div></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Питание и вес</h2>
+    <p class="note">Периоды между замерами веса: сколько дней записано и сколько в среднем съедено.</p>
+    <div class="tbl" id="tWeight"></div>
+  </section>
+
+  <section class="panel">
+    <h2>Что видно за 18 месяцев</h2>
+    <ul class="insights" style="margin-top:10px">
+      <li><b>Калорийность стабильная:</b> в среднем ~1600 ккал почти каждый месяц. Сильно отличаются только июль–август 2026 (~1760).</li>
+      <li><b>У двух плато разные причины.</b> Летом 2026 — калории: ~1740 ккал при полном дневнике. Зимой 2025–26 — пробелы: записано меньше половины дней (37 из 84), а в феврале было и меньше всего шагов.</li>
+      <li><b>Пятница — самый калорийный день</b> (~1720 против ~1580 в остальные дни).</li>
+      <li><b>Белок просел:</b> весной 2025 было 108–112 г в день, с осени 2025 — 85–98 г. Белок ≥100 г только в 43% дней.</li>
+      <li><b>Жиры поднялись</b> с 44–46 г весной 2025 до 60–67 г летом 2026, в октябре снова 55.</li>
+    </ul>
+  </section>
+
+  <p class="foot">Данные: FatSecret Platform API, выгрузка по месяцам. Обновление: <code>python3 fatsecret/fatsecret_sync.py month ГГГГ-ММ</code> → <code>python3 tools/build_food.py</code>. Это не медицинская рекомендация.</p>
+</div>
+
+<script src="data/food.js"></script>
+<script src="assets/charts.js"></script>
+<script>
+(function(){
+const ALL=window.FOOD.map(r=>({d:r[0],k:r[1],p:r[2],f:r[3],c:r[4],ok:r[1]>=800}));
+const last=ALL[ALL.length-1].d, first=ALL[0].d;
+const iso=d=>d.toISOString().slice(0,10);
+const toD=s=>new Date(s+'T12:00:00');
+const ruDate=s=>toD(s).toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric'});
+document.getElementById('range').textContent=`${ruDate(first)} — ${ruDate(last)}`;
+const okAll=ALL.filter(r=>r.ok);
+document.getElementById('lead').textContent=`${ALL.length} дней в дневнике. В среднем ${num(avg(okAll.map(r=>r.k)),0)} ккал, белок ${num(avg(okAll.map(r=>r.p)),0)} г, жиры ${num(avg(okAll.map(r=>r.f)),0)} г.`;
+
+// --- месяцы
+const byM={};ALL.forEach(r=>{(byM[r.d.slice(0,7)]=byM[r.d.slice(0,7)]||[]).push(r)});
+const months=Object.keys(byM).sort();
+const mStats=months.map(m=>{const ok=byM[m].filter(r=>r.ok);return{m,n:ok.length,k:avg(ok.map(r=>r.k)),p:avg(ok.map(r=>r.p)),f:avg(ok.map(r=>r.f)),c:avg(ok.map(r=>r.c))}});
+bars('cMonth',mStats.map(s=>({v:s.k,label:mlabel(s.m),inc:s.n<10,color:s.k>1700?'--s2':'--s1',tip:`${mlabel(s.m)} · <b>${num(s.k,0)} ккал</b><br>${s.n} дн. записано<br>Б ${num(s.p,0)} · Ж ${num(s.f,0)} · У ${num(s.c,0)} г`})),
+  {y0:0,y1:2000,step:500,goal:1600,goalLbl:'1600',labelEvery:innerWidth<700?3:1,aria:'Средние калории по месяцам'});
+
+const mid=m=>new Date(+m.slice(0,4),+m.slice(5,7)-1,15);
+const good=mStats.filter(s=>s.n>=10);
+lineChart('cMacro',[
+  {name:'Углеводы',c:'--s3',pts:good.map(s=>({d:mid(s.m),v:s.c})),unit:' г',p:0},
+  {name:'Белок',c:'--s1',pts:good.map(s=>({d:mid(s.m),v:s.p})),unit:' г',p:0,dy:-4},
+  {name:'Жиры',c:'--s2',pts:good.map(s=>({d:mid(s.m),v:s.f})),unit:' г',p:0,dy:4}
+],{y0:0,y1:200,step:50,r:52,aria:'Белки, жиры, углеводы по месяцам (месяцы с 10+ записанными днями)'});
+
+// --- период
+let P='all';
+function inPeriod(r){
+  if(P==='all')return true;
+  if(P==='2025'||P==='2026')return r.d.startsWith(P);
+  const n=+P;const from=new Date(toD(last));from.setDate(from.getDate()-n+1);return r.d>=iso(from);
+}
+function calDays(rows){if(!rows.length)return 0;
+  if(P==='30'||P==='90')return +P;
+  const a=P==='2025'?'2025-04-01':P==='2026'?'2026-01-01':first;const b=P==='2025'?'2025-12-31':last;
+  return Math.round((toD(b)-toD(a))/864e5)+1}
+function kpi(label,val,unit,sub){return `<div class="kpi"><span class="eyebrow">${label}</span><span class="v">${val}<small>${unit}</small></span><span class="d">${sub}</span></div>`}
+function render(){
+  const rows=ALL.filter(inPeriod),ok=rows.filter(r=>r.ok),cd=calDays(rows);
+  const k=avg(ok.map(r=>r.k)),p=avg(ok.map(r=>r.p)),f=avg(ok.map(r=>r.f)),c=avg(ok.map(r=>r.c));
+  const pp=ok.filter(r=>r.p>=100).length/Math.max(ok.length,1)*100, inr=ok.filter(r=>r.k>=1450&&r.k<=1750).length/Math.max(ok.length,1)*100;
+  const pill=(cls,t)=>`<span class="pill ${cls}">${t}</span>`;
+  document.getElementById('kpis').innerHTML=
+    kpi('Записано дней',rows.length,`из ${cd}`,rows.length/cd>=.85?pill('good','почти всё'):rows.length/cd>=.6?pill('warn','пробелы'):pill('bad','мало данных'))+
+    kpi('Калории',num(k,0),'ккал',`цель 1600 · ${Math.abs(k-1600)<=60?pill('good','в цели'):pill('warn',(k>1600?'+':'')+num(k-1600,0))}`)+
+    kpi('Белок',num(p,0),'г',`цель 110–120 · ${p>=105?pill('good','ок'):pill('warn','мало')}`)+
+    kpi('Жиры',num(f,0),'г',`цель 45–50 · ${f<=52?pill('good','ок'):pill('warn','много')}`)+
+    kpi('Углеводы',num(c,0),'г','остаток калорий')+
+    kpi('Дней с белком ≥100',num(pp,0),'%',`в коридоре 1450–1750: ${num(inr,0)}%`);
+  const wd=[0,1,2,3,4,5,6].map(i=>ok.filter(r=>wday(r.d)===i).map(r=>r.k));
+  bars('cWeek',wd.map((a,i)=>({v:avg(a),label:WD[i],color:i>=4?'--s2':'--s1',tip:`${WD[i]} · <b>${num(avg(a),0)} ккал</b><br>${a.length} дн.`})),
+    {w:560,h:240,y0:0,y1:2000,step:500,goal:1600,goalLbl:'1600',aria:'Калории по дням недели'});
+}
+document.querySelectorAll('#period button').forEach(b=>b.addEventListener('click',()=>{
+  P=b.dataset.p;document.querySelectorAll('#period button').forEach(x=>x.setAttribute('aria-pressed',x===b));render();try{localStorage.setItem('food-period',P)}catch(e){}
+}));
+try{const s=localStorage.getItem('food-period');const b=s&&document.querySelector(`#period button[data-p="${s}"]`);if(b){P=s;document.querySelectorAll('#period button').forEach(x=>x.setAttribute('aria-pressed',x===b))}}catch(e){}
+render();
+
+// --- по дням
+const sel=document.getElementById('monthSel');
+sel.innerHTML=months.slice().reverse().map(m=>`<option value="${m}">${MONTHS[+m.slice(5,7)-1]} ${m.slice(0,4)}</option>`).join('');
+function renderDays(){
+  const m=sel.value;const y=+m.slice(0,4),mo=+m.slice(5,7);const nd=new Date(y,mo,0).getDate();
+  const map={};(byM[m]||[]).forEach(r=>map[r.d]=r);
+  const days=[...Array(nd)].map((_,i)=>{const d=`${m}-${String(i+1).padStart(2,'0')}`;return map[d]||{d,k:0,p:0,f:0,c:0,ok:false,none:true}});
+  const lab=(r,i)=>String(i+1);const ev=innerWidth<700?3:1;
+  bars('cDays',days.map((r,i)=>({v:r.k,label:lab(r,i),inc:!r.ok&&!r.none,color:r.k>1800?'--s2':'--s1',tip:r.none?`${i+1} · нет записи`:`${toD(r.d).toLocaleDateString('ru-RU',{day:'numeric',month:'short',weekday:'short'})} · <b>${num(r.k,0)} ккал</b><br>Б ${num(r.p,0)} · Ж ${num(r.f,0)} · У ${num(r.c,0)} г${r.ok?'':'<br>записан не полностью'}`})),
+    {y0:0,y1:2400,step:600,goal:1600,goalLbl:'1600',labelEvery:ev,aria:'Калории по дням'});
+  bars('cDayP',days.map((r,i)=>({v:r.p,label:String(i+1),color:r.p<100?'--s2':'--s1',inc:!r.ok&&!r.none,tip:r.none?'нет записи':`${i+1} · <b>${num(r.p,0)} г белка</b>`})),
+    {w:520,h:180,y0:0,y1:150,step:50,goal:110,goalLbl:'110',labelEvery:5,aria:'Белок по дням'});
+  bars('cDayF',days.map((r,i)=>({v:r.f,label:String(i+1),color:r.f>55?'--s2':'--s1',inc:!r.ok&&!r.none,tip:r.none?'нет записи':`${i+1} · <b>${num(r.f,0)} г жиров</b>`})),
+    {w:520,h:180,y0:0,y1:120,step:40,goal:50,goalLbl:'50',labelEvery:5,aria:'Жиры по дням'});
+}
+sel.addEventListener('change',renderDays);renderDays();
+
+// --- питание и вес
+const W=[['2025-04-12',75.9],['2025-05-09',74.0],['2025-05-20',72.6],['2025-07-11',70.1],['2025-12-15',64.5],['2026-03-09',64.0],['2026-06-26',59.5],['2026-09-23',58.7],['2026-10-23',58.2]];
+const fd=s=>toD(s).toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit',year:'2-digit'});
+const tr=W.slice(1).map((w,i)=>{const a=W[i][0],b=w[0],days=Math.round((toD(b)-toD(a))/864e5);const seg=ALL.filter(r=>r.d>=a&&r.d<b&&r.ok);
+  const rate=(W[i][1]-w[1])/days*7;const cov=seg.length/days;
+  return `<tr><td>${fd(a)} → ${fd(b)}</td><td>${days}</td><td>${seg.length} <span class="pill ${cov>=.85?'good':cov>=.6?'warn':'bad'}">${num(cov*100,0)}%</span></td><td>${seg.length?num(avg(seg.map(r=>r.k)),0):'—'}</td><td>${num(-(W[i][1]-w[1]),1)}</td><td>${num(rate,2)} <span class="pill ${rate>=.2?'good':'warn'}">${rate>=.2?'идёт':'плато'}</span></td></tr>`}).join('');
+document.getElementById('tWeight').innerHTML=`<table><thead><tr><th>Период</th><th>Дней</th><th>Записано</th><th>Ккал/день</th><th>Вес, кг</th><th>кг/нед</th></tr></thead><tbody>${tr}</tbody></table>`;
+})();
+</script>
+</body>
+</html>

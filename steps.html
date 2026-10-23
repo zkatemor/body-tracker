@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Шаги и активность · Трекер тела Кати</title>
+<meta name="description" content="Шаги, активные калории и силовые тренировки по данным Apple Watch.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%227%22 fill=%22%232a78d6%22/%3E%3Cpath d=%22M7 22l6-6 4 4 8-9%22 stroke=%22white%22 stroke-width=%223%22 fill=%22none%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Onest:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <a class="brand" href="./">Трекер тела</a>
+    <nav class="tabs" aria-label="Разделы"><a href="./">Главная</a><a href="food.html">Питание</a><a href="steps.html" aria-current="page">Шаги и активность</a></nav>
+  </div>
+
+  <header>
+    <div class="eyebrow">Apple Watch · <span id="range"></span></div>
+    <h1>Шаги и активность</h1>
+    <p class="sub">Средние — по всем дням, включая «домашние». Штриховкой отмечены дни, когда часы были сняты: там шаги только с телефона и могут быть немного занижены.</p>
+  </header>
+
+  <div class="ctl">
+    <div class="seg" role="group" aria-label="Период" id="period">
+      <button type="button" data-p="30" aria-pressed="true">30 дней</button>
+      <button type="button" data-p="90" aria-pressed="false">90 дней</button>
+      <button type="button" data-p="since" aria-pressed="false">С апреля 2025</button>
+      <button type="button" data-p="all" aria-pressed="false">Всё время</button>
+    </div>
+  </div>
+
+  <section class="kpis" id="kpis" aria-label="Итоги периода"></section>
+
+  <section class="panel">
+    <h2>Шаги по дням</h2>
+    <p class="note">Последние 60 дней. Оранжевый — меньше 6 тыс. Штриховка — часы сняты. Точка под столбиком — силовая. Зелёная зона — 8–10 тыс.</p>
+    <div class="chart" id="cDays"></div>
+  </section>
+
+  <section class="panel">
+    <h2>Шаги по месяцам</h2>
+    <p class="note">Среднее за день. Штриховка — часы носились меньше 10 дней в месяце, данные неполные. Серым — до старта (до апреля 2025).</p>
+    <div class="chart" id="cMonth"></div>
+  </section>
+
+  <div class="grid2">
+    <section class="panel">
+      <h2>По дням недели</h2>
+      <p class="note">Среднее за выбранный период.</p>
+      <div class="chart" id="cWeek"></div>
+    </section>
+    <section class="panel">
+      <h2>Силовые по месяцам</h2>
+      <p class="note">Тренировки «Силовая», записанные часами. Цель — 3 в неделю (~13 в месяц).</p>
+      <div class="chart" id="cGym"></div>
+    </section>
+  </div>
+
+  <section class="panel">
+    <h2>Что видно</h2>
+    <ul class="insights" style="margin-top:10px">
+      <li><b>В обычные дни шагов достаточно:</b> с часами ~9–10 тыс., весна–лето 2026 — ~8 900 в среднем по всем дням. До старта, в 2024, было ~4 000.</li>
+      <li><b>Тормозят «домашние» дни.</b> С апреля 2025 было 96 дней меньше 3 тыс. шагов — почти каждый шестой. В октябре 2026 таких 7 из 30.</li>
+      <li><b>Выходные — главный резерв:</b> за последние 30 дней ~4 900 шагов против ~8 800 в будни. За всё время разница меньше (6 900 против 7 800).</li>
+      <li><b>В дни силовых</b> ~9 700 шагов и ~600 активных ккал, в остальные — ~7 000 и ~340.</li>
+      <li><b>Зима проседает:</b> ноябрь 2025 — ~5 000, февраль 2026 — ~3 100 шагов. Это совпало с зимним плато веса.</li>
+      <li><b>Силовые стали регулярнее:</b> в 2025 — 2–7 в месяц, с июня 2026 — 9–11.</li>
+    </ul>
+  </section>
+
+  <p class="foot">Данные: экспорт Apple Health от 23.10.2026 (шаги, активная энергия, тренировки). «Часы надеты» — день с базовым расходом от 1200 ккал и от 500 шагов. Это не медицинская рекомендация.</p>
+</div>
+
+<script src="data/steps.js"></script>
+<script src="assets/charts.js"></script>
+<script>
+(function(){
+const ALL=window.STEPS.map(r=>({d:r[0],s:r[1],a:r[2],w:!!r[3],g:!!r[4]}));
+const toD=s=>new Date(s+'T12:00:00');const iso=d=>d.toISOString().slice(0,10);
+const last=ALL[ALL.length-1].d;
+document.getElementById('range').textContent=`${toD(ALL[0].d).toLocaleDateString('ru-RU',{month:'long',year:'numeric'})} — ${toD(last).toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric'})}`;
+const k=v=>num(v/1000,1)+' тыс.';
+
+// по дням, 60 дней
+const d60=ALL.slice(-60);
+bars('cDays',d60.map(r=>({v:r.s,inc:!r.w&&r.s>=6000,mark:r.g,color:r.s<6000?'--s2':'--s1',label:toD(r.d).getDate()===1||toD(r.d).getDate()%5===0?String(toD(r.d).getDate()):'',
+  tip:`${toD(r.d).toLocaleDateString('ru-RU',{day:'numeric',month:'short',weekday:'short'})} · <b>${num(r.s,0)} шагов</b><br>${r.w?`${num(r.a,0)} активных ккал`:'часы сняты'}${r.g?'<br>силовая':''}`})),
+  {y0:0,y1:16000,step:4000,band:[8000,10000],fmtY:v=>v?num(v/1000,0)+'k':'0',aria:'Шаги по дням за 60 дней'});
+
+// по месяцам
+const byM={};ALL.forEach(r=>{(byM[r.d.slice(0,7)]=byM[r.d.slice(0,7)]||[]).push(r)});
+const months=Object.keys(byM).sort();
+bars('cMonth',months.map(m=>{const w=byM[m].filter(r=>r.w);const v=avg(byM[m].map(r=>r.s));return{v,label:mlabel(m),inc:w.length<10,color:m<'2025-04'?'--ink3':v>=8000?'--s1':'--s2',
+  tip:`${mlabel(m)} · <b>${num(v,0)} шагов</b><br>часы носились ${w.length} дн. из ${byM[m].length}`}}),
+  {y0:0,y1:12000,step:4000,band:[8000,10000],labelEvery:innerWidth<700?6:2,fmtY:v=>v?num(v/1000,0)+'k':'0',aria:'Средние шаги по месяцам'});
+
+// силовые по месяцам (с апреля 2025)
+const gm=months.filter(m=>m>='2025-04');
+bars('cGym',gm.map(m=>{const n=byM[m].filter(r=>r.g).length;return{v:n,label:mlabel(m),color:n>=11?'--s1':'--s2',tip:`${mlabel(m)} · <b>${n} силовых</b>`}}),
+  {w:560,h:240,y0:0,y1:16,step:4,goal:13,goalLbl:'13',labelEvery:3,valueLabels:v=>v,aria:'Силовые по месяцам'});
+
+// период
+let P='30';
+function rowsP(){if(P==='all')return ALL;if(P==='since')return ALL.filter(r=>r.d>='2025-04-01');const from=toD(last);from.setDate(from.getDate()-(+P)+1);return ALL.filter(r=>r.d>=iso(from))}
+const kpi=(l,v,u,s)=>`<div class="kpi"><span class="eyebrow">${l}</span><span class="v">${v}<small>${u}</small></span><span class="d">${s}</span></div>`;
+const pill=(c,t)=>`<span class="pill ${c}">${t}</span>`;
+function render(){
+  const rows=rowsP(),w=rows.filter(r=>r.w);
+  const s=avg(rows.map(r=>r.s)),sw=avg(w.map(r=>r.s)),wd=avg(rows.filter(r=>wday(r.d)<5).map(r=>r.s)),we=avg(rows.filter(r=>wday(r.d)>=5).map(r=>r.s));
+  const ten=rows.filter(r=>r.s>=10000).length,low=rows.filter(r=>r.s<6000).length,off=rows.length-w.length;
+  const gyms=rows.filter(r=>r.g).length,weeks=rows.length/7;
+  document.getElementById('kpis').innerHTML=
+    kpi('Шаги в день',num(s,0),'',`в дни с часами ${num(sw,0)} · ${s>=8000?pill('good','в цели'):pill('warn','ниже цели')}`)+
+    kpi('Будни / выходные',num(wd/1000,1)+' / '+num(we/1000,1),'тыс.',we<wd*0.85?pill('warn','выходные ниже'):pill('good','ровно'))+
+    kpi('Дней меньше 6 тыс.',low,`из ${rows.length}`,`≥10 тыс.: ${ten} · ${low/rows.length>0.2?pill('warn','много'):pill('good','мало')}`)+
+    kpi('Дней без часов',off,`из ${rows.length}`,'шаги в эти дни — с телефона')+
+    kpi('Силовые',num(gyms/weeks,1),'в нед.',`всего ${gyms}`)+
+    kpi('Активные ккал',num(avg(w.map(r=>r.a)),0),'в день','по часам, обычно завышено');
+  const byW=[0,1,2,3,4,5,6].map(i=>rows.filter(r=>wday(r.d)===i).map(r=>r.s));
+  bars('cWeek',byW.map((a,i)=>({v:avg(a),label:WD[i],color:i>=5?'--s2':'--s1',tip:`${WD[i]} · <b>${num(avg(a),0)} шагов</b><br>${a.length} дн.`})),
+    {w:560,h:240,y0:0,y1:12000,step:4000,band:[8000,10000],valueLabels:v=>num(v/1000,1),fmtY:v=>v?num(v/1000,0)+'k':'0',aria:'Шаги по дням недели'});
+}
+document.querySelectorAll('#period button').forEach(b=>b.addEventListener('click',()=>{P=b.dataset.p;document.querySelectorAll('#period button').forEach(x=>x.setAttribute('aria-pressed',x===b));render();try{localStorage.setItem('steps-period',P)}catch(e){}}));
+try{const sv=localStorage.getItem('steps-period');const b=sv&&document.querySelector(`#period button[data-p="${sv}"]`);if(b){P=sv;document.querySelectorAll('#period button').forEach(x=>x.setAttribute('aria-pressed',x===b))}}catch(e){}
+render();
+})();
+</script>
+</body>
+</html>
