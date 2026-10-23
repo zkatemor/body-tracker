@@ -101,6 +101,11 @@ details summary:focus-visible{outline:2px solid var(--s1);outline-offset:2px}
 .mtrack{position:relative;height:12px}
 .mtrack::before{content:"";position:absolute;left:50%;top:-3px;bottom:-3px;width:1px;background:var(--ink3)}
 .mtrack div{position:absolute;top:0;bottom:0}
+.srclink{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--s1);text-decoration:none;border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:5px 12px}
+.srclink:hover{border-color:var(--s1)}
+.srclink:focus-visible{outline:2px solid var(--s1);outline-offset:2px}
+.headside{display:grid;gap:10px;justify-items:start}
+.foot a{color:inherit}
 .foot{color:var(--ink3);font-size:12px;max-width:80ch}
 </style>
 </head><body>
@@ -111,10 +116,13 @@ details summary:focus-visible{outline:2px solid var(--s1);outline-offset:2px}
       <h1>−17,7 кг, из них почти всё — жир</h1>
       <p class="sub">С конца сентября — финальный отрезок: 1600 ккал и новая силовая программа с упором на ягодицы. За первый месяц −0,5 кг; объёмы рук, плеч и бёдер выросли — в основном вода от новой нагрузки, а не жир.</p>
     </div>
+    <div class="headside">
+    <a class="srclink" href="https://docs.google.com/spreadsheets/d/1mLTbE53vwJ1VL-9ManBTwdSsbVKpNzFgciY4COAL1OY/edit" target="_blank" rel="noopener">Таблица замеров в Google Sheets ↗</a>
     <div class="chips">
       <span class="chip">Рост <b>154 см</b></span><span class="chip">Возраст <b>28</b></span>
       <span class="chip">Цель <b>1600</b> ккал</span><span class="chip">Б <b>110–120</b> · Ж <b>45–50 г</b></span>
       <span class="chip">Силовые <b>3×/нед</b></span><span class="chip"><b>8–10 тыс.</b> шагов</span>
+    </div>
     </div>
   </header>
 
@@ -251,7 +259,7 @@ details summary:focus-visible{outline:2px solid var(--s1);outline-offset:2px}
     </details>
   </section>
 
-  <p class="foot">Данные: «body measurement tracker» (замеры сантиметром, 09.05.2025–23.10.2026, старт 12.04.2025), дневник FatSecret 1–22.10.2026 и распечатка Accuniq BC380 с историей тестов 29.04.2025, 01.07.2026 и 23.09.2026. Жировая/безжировая масса для ранних тестов посчитана из веса и % жира. Расход калорий — оценка. Это не медицинская рекомендация.</p>
+  <p class="foot">Данные: <a href="https://docs.google.com/spreadsheets/d/1mLTbE53vwJ1VL-9ManBTwdSsbVKpNzFgciY4COAL1OY/edit" target="_blank" rel="noopener">«body measurement tracker»</a> (замеры сантиметром, 09.05.2025–23.10.2026, старт 12.04.2025), дневник FatSecret 1–22.10.2026 и распечатка Accuniq BC380 с историей тестов 29.04.2025, 01.07.2026 и 23.09.2026. Жировая/безжировая масса для ранних тестов посчитана из веса и % жира. Расход калорий — оценка. Это не медицинская рекомендация.</p>
 </div>
 
 <script>
