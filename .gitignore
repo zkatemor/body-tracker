@@ -2,3 +2,6 @@
 fatsecret/.env
 fatsecret/token.json
 fatsecret/data/
+.env
+
+.idea/
